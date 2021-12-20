@@ -3,6 +3,7 @@
 /// 哈希表 hashmap
 
 /// OsString OsStr CString CStr 以str结尾为借用者版本 否则为所有者版本
+use std::collections::HashMap;
 fn main() {
     // let v: Vec<i32> = Vec::new();
     // 使用push向动态数组中添加元素
@@ -85,6 +86,58 @@ fn main() {
     for c in "Hola".chars() {
         println!("c = {}", c);
     }
+
+    let mut map = HashMap::new();
+    map.insert("a", 10);
+    map.insert("b", 1);
+
+    println!("{:?}", map);
+
+    let teams = vec![String::from("Blue"), String::from("Yellow")];
+    let initial_score = vec![10, 30];
+    let  scores: HashMap<_, _> = teams.iter().zip(initial_score.iter()).collect();
+    println!("{:#?}", scores);
+    /// 对于实现了Copy trait的类型 如i32 它的值会被简单地复制到哈希映射中.而对于String这种持有所有权的值,其值将会转移且所有权会转移给哈希映射
+    let field_name = String::from("Favorite color");
+    // let field_value = String::from("Blue");
+    let t = 10;
+    let mut m: HashMap<String, i32> = HashMap::new();
+    map.insert(&field_name[..], t);
+    /// field_name和field_value从这一刻开始失效,如果使用它们则会导致编译出错
+    // println!("k: {}, v: {}", field_name, field_value);
+    println!("t = {}", t);
+    /// 使用get来获取映射中的值
+    let score = scores.get(&"Blue".to_string());
+    println!("Blue score = {:#?}", score);
+
+    for (k, v) in &scores {
+        println!("{}:{}", k, v);
+    }
+    /// 覆盖旧值
+    map.insert("Blue",30);
+    for (k, v) in &mut map{
+        println!("{}:{}", k, v);
+    }
+
+    /// 只在键没有对应值时插入数据
+    let mut s = HashMap::new();
+    s.insert(String::from("Blue"), 10);
+    s.entry(String::from("Yellow")).or_insert(50);
+    s.entry(String::from("Blue")).or_insert(50);
+    for (k,v) in s {
+        println!("k = {}, v = {}", k, v);
+    }
+
+
+    /// 使用旧值来更新值
+    let text = "hello world wonderful world";
+    let mut text_map = HashMap::new();
+    for word in text.split_whitespace() {
+        let count = text_map.entry(word).or_insert(0);
+        *count += 1;
+    }
+
+    println!("{:#?}",text_map)
 }
 
 enum SpreadsheetCell {
