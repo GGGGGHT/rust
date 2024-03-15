@@ -17,6 +17,21 @@ impl Rectangle {
     fn area(&self) -> u32 {
         self.width * self.height
     }
+
+    fn width(&self) -> bool {
+        self.width > 0
+    }
+
+    fn can_hold(&self, another: &Rectangle) -> bool {
+        self.width >= another.width && self.height >= another.height
+    }
+
+    fn square(size: u32) -> Self {
+        Self {
+            width: size,
+            height: size,
+        }
+    }
 }
 
 impl Rectangle {
@@ -56,6 +71,10 @@ fn main(){
         height: 50,
     };
 
+    if rect1.width() {
+        println!("The rectangle is not empty.");
+    }
+    println!("The width is {}", rect1.width);
     dbg!(&rect1);
     println!(
         "The area of the rectangle is {} square pixels.",
@@ -64,6 +83,23 @@ fn main(){
     );
     println!("rect1 is {:#?}", rect1);
 
+    {
+        let rect1 = Rectangle {
+            width: 30,
+            height: 50,
+        };
+        let rect2 = Rectangle {
+            width: 10,
+            height: 40,
+        };
+        let rect3 = Rectangle {
+            width: 60,
+            height: 45,
+        };
+    
+        println!("Can rect1 hold rect2? {}", rect1.can_hold(&rect2));
+        println!("Can rect1 hold rect3? {}", rect1.can_hold(&rect3));
+    }
     rect1.other();
     let user1 = User {
         email: String::from("someone@example.com"),
@@ -72,6 +108,9 @@ fn main(){
         sign_in_count: 1,
     };
 
+    let square = Rectangle::square(3);
+    println!("square is {:#?}", square);
+    println!("area is {}", square.area());
     // 请注意，结构更新语法就像带有 = 的赋值，因为它移动了数据，就像我们在“变量与数据交互的方式
     // （一）：移动”部分讲到的一样。在这个例子中，总体上说我们在创建 user2 后不能就再使用 user1 了，因为 user1 的 username 字段中的 String 被移到 user2 中。如果我们给 user2 的 email 和 username 都赋予新的 String 值，从而只使用 user1 的 active 和 sign_in_count 值，那么 user1 在创建 user2 后仍然有效。active 和 sign_in_count 的类型是实现 Copy trait 的类型，所以我们在“变量与数据交互的方式（二）：克隆” 部分讨论的行为同样适用。
     let user2 = User {
